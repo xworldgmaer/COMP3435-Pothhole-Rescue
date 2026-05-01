@@ -1,0 +1,137 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+p {
+    font-size: 12px;
+}
+
+h2{
+    font-size: 32px;
+}
+
+@keyframes fade-up {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(1);
+    }
+
+    100%{
+        opacity: 1;
+        transform: translateY(0px) scale(1);
+    }
+}
+
+@keyframes fade-down {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scale(1);  /* start from above */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px) scale(1);   /* end at normal position */
+    }
+}
+
+nav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: fade-up 1s ease-in-out;
+}
+
+.imageContainer {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imageContainer img {
+    max-height: 100%;
+    width: auto;
+}
+
+.navOptions{
+    flex: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: none;
+}
+
+.navOptions li{
+    display: inline-block;
+    padding: 0 80px 0 0;
+}
+
+.navOptions li a{
+    text-decoration: none;
+    font-size: 14px;
+    color: black;
+}
+
+.loginContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    background-color: #f9f9f9;
+}
+
+.loginContainer form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.loginContainer input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.loginContainer button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.loginContainer button:hover {
+    background-color: #0056b3;
+}
+
+#status {
+    margin-top: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+#downloadJson {
+    margin-top: 10px;
+    background-color: #28a745;
+}
+
+#downloadJson:hover {
+    background-color: #1e7e34;
+}
