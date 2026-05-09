@@ -1,0 +1,350 @@
+/* ═══════════════════════════════════════════════════════════════════
+   POTHOLE RESCUE — Login & Sign Up Stylesheet
+   Key fix: #particles-js must be position:fixed, cover the full
+   viewport, and sit at z-index:0. Everything else uses z-index >= 1.
+   The body background must NOT cover the canvas — keep it transparent.
+═══════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:   #162DB0;
+  --blue2:  #1d3df0;
+  --navy:   #0a0e3d;
+  --gold:   #ffcc00;
+  --red:    #e74c3c;
+  --green:  #2ecc71;
+  --white:  #ffffff;
+  --muted:  #9aa0b4;
+  --border: #d0d5e8;
+  --font:   'Inter', 'Segoe UI', sans-serif;
+  --radius: 16px;
+}
+
+/* ── Body: dark background so particles are visible ─────────────── */
+body {
+  font-family: var(--font);
+  font-size: 16px;
+  /* ★ CRITICAL: This is the background that particles render ON TOP of.
+     Keep it a solid dark colour — do NOT use a gradient that competes
+     with the particle canvas. The canvas sits on top of this colour. */
+  background-color: #0b1441;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #1a1a1a;
+}
+
+/* ── Skip link ───────────────────────────────────────────────────── */
+.skipLink {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--gold); color: #000; font-weight: 700;
+  padding: 8px 16px; z-index: 9999; text-decoration: none;
+  border-radius: 0 0 8px 0;
+}
+.skipLink:focus { left: 0; }
+.sr-only { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ══════════════════════════════════════════════════════════════════
+   ★ PARTICLES FIX — the four rules that matter most
+══════════════════════════════════════════════════════════════════ */
+
+/* 1. The container must be fixed so it covers the whole viewport */
+#particles-js {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  /* 2. z-index: 0 — sits above the body background, below everything else */
+  z-index: 0;
+  /* 3. pointer-events: none — mouse events pass through to the form */
+  pointer-events: none;
+  /* 4. No background — the body colour shows through */
+  background: transparent;
+}
+
+/* particles.js injects a <canvas> inside #particles-js.
+   Make sure it also has pointer-events: none */
+#particles-js canvas {
+  pointer-events: none !important;
+  display: block;
+}
+
+/* 5. Everything that should appear above the particles MUST have
+      position: relative (or absolute/fixed) + z-index >= 1 */
+nav,
+.authContainer,
+.modalOverlay,
+.toast,
+.skipLink {
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Navbar ──────────────────────────────────────────────────────── */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 28px;
+  /* Semi-transparent so particles glow through behind it */
+  background: rgba(10, 14, 61, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navBrand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.navLogo  { height: 40px; width: auto; }
+.navTitle { font-size: 17px; font-weight: 700; color: #fff; white-space: nowrap; }
+
+.navLinks { display: flex; align-items: center; gap: 6px; }
+.navLinks a {
+  text-decoration: none; font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.82); padding: 7px 14px;
+  border-radius: 8px; transition: background 0.15s, color 0.15s;
+}
+.navLinks a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.navSignupBtn { background: var(--gold) !important; color: #000 !important; font-weight: 700 !important; }
+.navSignupBtn:hover { background: #e6b800 !important; }
+
+/* ── Toast notification ──────────────────────────────────────────── */
+.toast {
+  position: fixed; top: 72px; left: 50%; transform: translateX(-50%);
+  padding: 12px 22px; border-radius: 10px; font-size: 14px; font-weight: 600;
+  max-width: 90vw; text-align: center; z-index: 500;
+  animation: toastIn 0.3s ease;
+}
+.toast-info    { background: var(--blue);  color: #fff; }
+.toast-success { background: var(--green); color: #fff; }
+.toast-error   { background: var(--red);   color: #fff; }
+@keyframes toastIn {
+  from { opacity:0; transform: translateX(-50%) translateY(-10px); }
+  to   { opacity:1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Auth container ──────────────────────────────────────────────── */
+.authContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  padding: 28px 16px;
+}
+
+/* ── Auth card ───────────────────────────────────────────────────── */
+.authCard {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 20px;
+  padding: 36px 32px 28px;
+  width: 100%; max-width: 430px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5);
+  animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Coloured top stripe */
+.cardAccent {
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--blue), var(--gold), var(--blue2));
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+.formLogo { display: flex; justify-content: center; margin-bottom: 14px; }
+.formLogo img { height: 68px; width: auto; }
+
+.authCard h2 {
+  font-size: 26px; font-weight: 800; color: var(--navy);
+  text-align: center; margin-bottom: 4px;
+}
+.authSubtitle { text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+
+/* ── Role tabs ───────────────────────────────────────────────────── */
+.roleTabs {
+  display: flex; gap: 4px; background: #f0f2f5;
+  border-radius: 12px; padding: 4px; margin-bottom: 18px;
+}
+.roleTab {
+  flex: 1; padding: 8px 4px; font-size: 12px; font-weight: 600;
+  border: none; border-radius: 9px; cursor: pointer;
+  background: transparent; color: var(--muted);
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  white-space: nowrap;
+}
+.roleTab.active {
+  background: #fff; color: var(--navy);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.roleTab:focus { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+/* ── Input groups ────────────────────────────────────────────────── */
+.inputGroup { margin-bottom: 14px; }
+.inputGroup label {
+  display: block; font-size: 13px; font-weight: 600;
+  color: var(--navy); margin-bottom: 6px;
+}
+.inputWrap { position: relative; display: flex; align-items: center; }
+.iIcon {
+  position: absolute; left: 12px; font-size: 15px; pointer-events: none;
+}
+.inputWrap input {
+  width: 100%; padding: 11px 40px 11px 38px;
+  border: 1.5px solid var(--border); border-radius: 9px;
+  font-size: 15px; background: #fafbff; color: #1a1a1a;
+  font-family: var(--font);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.inputWrap input:focus {
+  border-color: var(--blue); outline: none;
+  box-shadow: 0 0 0 3px rgba(22, 45, 176, 0.13);
+}
+.pwToggle {
+  position: absolute; right: 10px; background: none;
+  border: none; cursor: pointer; font-size: 15px; padding: 4px;
+  color: var(--muted);
+}
+.fieldHint { font-size: 11px; color: var(--muted); margin-top: 4px; display: block; }
+
+/* Password strength bar */
+.strengthTrack {
+  height: 4px; background: #e0e3ee; border-radius: 2px;
+  margin-top: 6px; overflow: hidden;
+}
+.strengthBar {
+  height: 100%; width: 0%; border-radius: 2px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+/* ── Form extras ─────────────────────────────────────────────────── */
+.formExtras {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px; font-size: 13px;
+}
+.rememberLabel { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #555; }
+.forgotLink { color: var(--blue); text-decoration: none; font-weight: 500; }
+.forgotLink:hover { text-decoration: underline; }
+
+/* ── Submit button ───────────────────────────────────────────────── */
+.submitBtn {
+  width: 100%; padding: 13px; margin-top: 4px;
+  background: linear-gradient(135deg, var(--blue), var(--blue2));
+  color: #fff; border: none; border-radius: 9px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.submitBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(22,45,176,0.35); }
+.submitBtn:focus { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Status message ──────────────────────────────────────────────── */
+.statusMsg { margin-top: 10px; font-size: 13px; font-weight: 600; text-align: center; min-height: 18px; }
+.status-error   { color: var(--red);   }
+.status-success { color: var(--green); }
+.status-info    { color: var(--blue);  }
+
+/* ── Divider ─────────────────────────────────────────────────────── */
+.divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 16px 0 12px;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.divider span { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+/* ── OAuth buttons ───────────────────────────────────────────────── */
+.oauthRow { display: flex; gap: 10px; margin-bottom: 14px; }
+.oauthBtn {
+  flex: 1; padding: 10px; border-radius: 9px;
+  border: 1.5px solid var(--border); font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 8px; transition: box-shadow 0.18s, transform 0.15s;
+  background: #fff;
+}
+.oauthBtn:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.gBtn  { color: #444; }
+.fbBtn { background: #1877F2; color: #fff; border-color: #1877F2; }
+
+/* ── Small text & links ──────────────────────────────────────────── */
+.smallText { text-align: center; font-size: 13px; color: #555; }
+.smallText a { color: var(--blue); font-weight: 600; text-decoration: none; }
+.smallText a:hover { text-decoration: underline; }
+
+/* ── Demo credentials hint ───────────────────────────────────────── */
+.demoHint {
+  margin-top: 14px; font-size: 12px; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px;
+}
+.demoHint summary { cursor: pointer; font-weight: 600; color: var(--navy); }
+.demoTable { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+.demoTable th { background: var(--navy); color: #fff; padding: 5px 8px; text-align: left; }
+.demoTable td { padding: 5px 8px; border-bottom: 1px solid #eee; }
+.demoTable tr:last-child td { border-bottom: none; }
+
+/* ── About modal ─────────────────────────────────────────────────── */
+.modalOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; z-index: 300;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+.modalBox {
+  background: #fff; border-radius: var(--radius);
+  width: 100%; max-width: 500px; max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modalHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; border-bottom: 1px solid #eee;
+}
+.modalHeader h3 { font-size: 18px; color: var(--navy); }
+.modalClose {
+  background: none; border: none; font-size: 18px;
+  cursor: pointer; color: var(--muted); padding: 4px 8px; border-radius: 6px;
+}
+.modalClose:hover { background: #f0f2f5; }
+
+.aboutBody { padding: 20px 22px; }
+.aboutBody p  { font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 10px; }
+.aboutBody h4 { font-size: 15px; color: var(--navy); margin: 14px 0 6px; }
+.aboutLogoWrap { text-align: center; margin-bottom: 16px; }
+.aboutLogoWrap img { height: 64px; }
+
+.roleCards { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.roleCard  {
+  flex: 1; min-width: 110px; background: #f7f8fc;
+  border-radius: 10px; padding: 12px; text-align: center;
+}
+.roleCard span   { font-size: 22px; display: block; margin-bottom: 6px; }
+.roleCard strong { font-size: 13px; color: var(--navy); }
+.roleCard p      { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .authCard   { padding: 28px 18px 22px; }
+  nav         { padding: 0 14px; }
+  .navTitle   { display: none; }
+  .roleTabs   { gap: 2px; }
+  .roleTab    { font-size: 11px; padding: 7px 3px; }
+  .oauthRow   { flex-direction: column; }
+  .roleCards  { flex-direction: column; }
+}

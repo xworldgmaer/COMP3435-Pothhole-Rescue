@@ -1,0 +1,43 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     DROP THIS INTO index.html — replace the existing #customerPlanner div
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<div id="customerPlanner" class="plannerBox customer-view">
+    <p class="hintText">Enter your start location and destination to find the safest driving route across Barbados.</p>
+
+    <div class="routeInputs">
+        <div class="routeField">
+            <label for="fromLocation">🟢 From</label>
+            <input type="text" id="fromLocation"
+                   placeholder="e.g. Oistins, Worthing, Bridgetown"
+                   list="locationSuggestions"
+                   autocomplete="off"
+                   aria-label="Start location">
+        </div>
+        <div class="routeSwapBtn" onclick="swapLocations()" title="Swap locations" aria-label="Swap start and destination">⇅</div>
+        <div class="routeField">
+            <label for="toLocation">🔴 To</label>
+            <input type="text" id="toLocation"
+                   placeholder="e.g. Black Rock, Holetown, Speightstown"
+                   list="locationSuggestions"
+                   autocomplete="off"
+                   aria-label="Destination">
+        </div>
+        <datalist id="locationSuggestions"></datalist>
+        <button class="searchBtn routePlanBtn" onclick="planRoute()" aria-label="Find safest route">
+            🗺 Find Route
+        </button>
+    </div>
+
+    <!-- Quick location presets -->
+    <div class="routePresets" aria-label="Quick route presets">
+        <span class="presetsLabel">Quick routes:</span>
+        <button class="presetBtn" onclick="setRoute('Oistins','Black Rock')">Oistins → Black Rock</button>
+        <button class="presetBtn" onclick="setRoute('Bridgetown','Speightstown')">Bridgetown → Speightstown</button>
+        <button class="presetBtn" onclick="setRoute('Holetown','Worthing')">Holetown → Worthing</button>
+        <button class="presetBtn" onclick="setRoute('Six Cross Roads','Bridgetown')">Six Cross Roads → Bridgetown</button>
+    </div>
+
+    <div id="routeStatus" role="status" aria-live="polite" class="routeStatus"></div>
+    <div id="routeResults" class="resultsContainer"></div>
+</div>

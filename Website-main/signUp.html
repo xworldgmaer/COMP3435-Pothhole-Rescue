@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="loginStylesheet.css">
+    <link rel="icon" type="image/png" href="assets/Images/UserInterfaceLogo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="signUp.js" defer></script>
+    <title>Sign Up — Pothole Rescue</title>
+</head>
+<body>
+
+<a href="#signupForm" class="skipLink">Skip to sign up form</a>
+<div id="particles-js" aria-hidden="true"></div>
+
+<nav role="navigation" aria-label="Main navigation">
+    <div class="navBrand">
+        <img src="assets/Images/UserInterfaceLogo.png" alt="Pothole Rescue logo" class="navLogo">
+        <span class="navTitle">Pothole Rescue</span>
+    </div>
+    <div class="navLinks">
+        <a href="index.html">Dashboard</a>
+        <a href="login.html">Login</a>
+    </div>
+</nav>
+
+<div id="toast" class="toast" role="alert" aria-live="assertive" hidden></div>
+
+<div class="authContainer">
+    <div class="authCard">
+        <div class="cardAccent"></div>
+
+        <div class="formLogo">
+            <img src="assets/Images/UserInterfaceLogo.png" alt="Pothole Rescue">
+        </div>
+        <h2>Create Account</h2>
+        <p class="authSubtitle">Join Pothole Rescue it's free</p>
+
+        <!-- Role selector -->
+        <div class="roleTabs" role="group" aria-label="Select your account role">
+            <button class="roleTab active" data-role="Customer"  onclick="selectRole(this)" aria-pressed="true" >🚗 Customer</button>
+            <button class="roleTab"        data-role="Government"onclick="selectRole(this)" aria-pressed="false">🏛️ Gov</button>
+            <button class="roleTab"        data-role="IT Staff"  onclick="selectRole(this)" aria-pressed="false">🔧 IT Staff</button>
+        </div>
+
+        <form id="signupForm" novalidate aria-labelledby="signupHeading">
+            <span id="signupHeading" class="sr-only">Sign up form</span>
+
+            <div class="inputGroup">
+                <label for="newUsername">Username</label>
+                <div class="inputWrap">
+                    <span class="iIcon">👤</span>
+                    <input id="newUsername" type="text" placeholder="Choose a username"
+                           required autocomplete="username" aria-required="true"
+                           aria-describedby="usernameReq">
+                </div>
+                <span id="usernameReq" class="fieldHint">Choose a unique username</span>
+            </div>
+
+            <div class="inputGroup">
+                <label for="newPassword">Password</label>
+                <div class="inputWrap">
+                    <span class="iIcon">🔒</span>
+                    <input id="newPassword" type="password" placeholder="Create a strong password"
+                           required autocomplete="new-password" aria-required="true"
+                           aria-describedby="passwordReq" oninput="checkStrength(this.value)">
+                    <button type="button" class="pwToggle" onclick="togglePw('newPassword')" aria-label="Show/hide password">👁</button>
+                </div>
+                <span id="passwordReq" class="fieldHint">6+ characters, with a letter, number &amp; special character</span>
+                <div class="strengthTrack" aria-label="Password strength indicator">
+                    <div class="strengthBar" id="strengthBar"></div>
+                </div>
+                <span id="strengthLbl" class="fieldHint"></span>
+            </div>
+
+            <div class="inputGroup">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="inputWrap">
+                    <span class="iIcon">🔒</span>
+                    <input id="confirmPassword" type="password" placeholder="Repeat your password"
+                           required autocomplete="new-password" aria-required="true">
+                    <button type="button" class="pwToggle" onclick="togglePw('confirmPassword')" aria-label="Show/hide password">👁</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submitBtn">Create Account</button>
+            <p id="signupStatus" role="alert" aria-live="assertive" class="statusMsg"></p>
+        </form>
+
+        <div class="divider"><span>or sign up with</span></div>
+        <div class="oauthRow">
+            <button class="oauthBtn gBtn" onclick="oauthNotice('Google')" aria-label="Sign up with Google">
+                <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Google
+            </button>
+            <button class="oauthBtn fbBtn" onclick="oauthNotice('Facebook')" aria-label="Sign up with Facebook">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+                Facebook
+            </button>
+        </div>
+
+        <p class="smallText">Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+</div>
+
+<script>
+function togglePw(id) { const i=document.getElementById(id); i.type=i.type==='password'?'text':'password'; }
+function oauthNotice(p) { const t=document.getElementById('toast'); t.textContent=p+' sign-up requires a backend server. Please use the form above.'; t.className='toast toast-info'; t.hidden=false; setTimeout(()=>t.hidden=true,4000); }
+function selectRole(btn) { document.querySelectorAll('.roleTab').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); }); btn.classList.add('active'); btn.setAttribute('aria-pressed','true'); }
+function checkStrength(pw) {
+    let s=0;
+    if(pw.length>=6)s++; if(pw.length>=10)s++; if(/[A-Z]/.test(pw))s++; if(/[0-9]/.test(pw))s++; if(/[^A-Za-z0-9]/.test(pw))s++;
+    const bar=document.getElementById('strengthBar'), lbl=document.getElementById('strengthLbl');
+    const cols=['','#e74c3c','#e67e22','#f1c40f','#2ecc71','#27ae60'];
+    const lbls=['','Weak','Fair','Good','Strong','Very Strong'];
+    bar.style.width=(s/5*100)+'%'; bar.style.background=cols[s]||'#ccc';
+    lbl.textContent=s>0?lbls[s]:'';
+}
+</script>
+</body>
+</html>

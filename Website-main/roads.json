@@ -1,0 +1,221 @@
+{
+  "roads": [
+    {
+      "name": "ABC Highway",
+      "type": "Highway (4 lanes)",
+      "lengthKm": 9.5,
+      "wasResurfaced": false,
+      "potholes": {
+        "shallow": 20,
+        "medium": 8,
+        "deep": 5
+      },
+      "monthlyPotholes": {
+        "January":    { "shallow": 2, "medium": 1, "deep": 0 },
+        "February":   { "shallow": 3, "medium": 1, "deep": 1 },
+        "March":      { "shallow": 1, "medium": 1, "deep": 0 },
+        "April":      { "shallow": 2, "medium": 1, "deep": 1 },
+        "May":        { "shallow": 3, "medium": 1, "deep": 1 },
+        "June":       { "shallow": 2, "medium": 1, "deep": 0 },
+        "July":       { "shallow": 2, "medium": 0, "deep": 1 },
+        "August":     { "shallow": 1, "medium": 1, "deep": 0 },
+        "September":  { "shallow": 2, "medium": 0, "deep": 1 },
+        "October":    { "shallow": 1, "medium": 1, "deep": 0 },
+        "November":   { "shallow": 1, "medium": 0, "deep": 0 },
+        "December":   { "shallow": 0, "medium": 0, "deep": 1 }
+      },
+      "costs": {
+        "repairPerShallow": 20,
+        "repairPerMedium": 50,
+        "repairPerDeep": 100,
+        "resurfacePerKm": 100
+      }
+    },
+    {
+      "name": "Spring Garden Highway",
+      "type": "Highway (4 lanes)",
+      "lengthKm": 8.2,
+      "wasResurfaced": true,
+      "potholes": {
+        "shallow": 10,
+        "medium": 4,
+        "deep": 2
+      },
+      "monthlyPotholes": {
+        "January":    { "shallow": 1, "medium": 0, "deep": 0 },
+        "February":   { "shallow": 1, "medium": 1, "deep": 0 },
+        "March":      { "shallow": 1, "medium": 0, "deep": 1 },
+        "April":      { "shallow": 1, "medium": 1, "deep": 0 },
+        "May":        { "shallow": 1, "medium": 1, "deep": 0 },
+        "June":       { "shallow": 1, "medium": 0, "deep": 0 },
+        "July":       { "shallow": 1, "medium": 0, "deep": 1 },
+        "August":     { "shallow": 1, "medium": 1, "deep": 0 },
+        "September":  { "shallow": 1, "medium": 0, "deep": 0 },
+        "October":    { "shallow": 0, "medium": 0, "deep": 0 },
+        "November":   { "shallow": 1, "medium": 0, "deep": 0 },
+        "December":   { "shallow": 0, "medium": 0, "deep": 0 }
+      },
+      "costs": {
+        "repairPerShallow": 20,
+        "repairPerMedium": 50,
+        "repairPerDeep": 100,
+        "resurfacePerKm": 100
+      }
+    },
+    {
+      "name": "Ronald Mapp Highway",
+      "type": "Highway (2 lanes)",
+      "lengthKm": 7.6,
+      "wasResurfaced": false,
+      "potholes": {
+        "shallow": 18,
+        "medium": 12,
+        "deep": 7
+      },
+      "monthlyPotholes": {
+        "January":    { "shallow": 2, "medium": 1, "deep": 1 },
+        "February":   { "shallow": 2, "medium": 2, "deep": 0 },
+        "March":      { "shallow": 1, "medium": 1, "deep": 1 },
+        "April":      { "shallow": 2, "medium": 1, "deep": 1 },
+        "May":        { "shallow": 2, "medium": 1, "deep": 1 },
+        "June":       { "shallow": 1, "medium": 1, "deep": 0 },
+        "July":       { "shallow": 2, "medium": 2, "deep": 1 },
+        "August":     { "shallow": 1, "medium": 1, "deep": 1 },
+        "September":  { "shallow": 2, "medium": 1, "deep": 0 },
+        "October":    { "shallow": 1, "medium": 0, "deep": 1 },
+        "November":   { "shallow": 1, "medium": 1, "deep": 0 },
+        "December":   { "shallow": 1, "medium": 0, "deep": 0 }
+      },
+      "costs": {
+        "repairPerShallow": 20,
+        "repairPerMedium": 50,
+        "repairPerDeep": 100,
+        "resurfacePerKm": 100
+      }
+    },
+    {
+      "name": "Martindales Road",
+      "type": "Residential road",
+      "lengthKm": 3.4,
+      "wasResurfaced": true,
+      "potholes": {
+        "shallow": 15,
+        "medium": 10,
+        "deep": 4
+      },
+      "monthlyPotholes": {
+        "January":    { "shallow": 2, "medium": 1, "deep": 0 },
+        "February":   { "shallow": 1, "medium": 1, "deep": 1 },
+        "March":      { "shallow": 2, "medium": 1, "deep": 0 },
+        "April":      { "shallow": 1, "medium": 2, "deep": 0 },
+        "May":        { "shallow": 2, "medium": 1, "deep": 1 },
+        "June":       { "shallow": 1, "medium": 1, "deep": 0 },
+        "July":       { "shallow": 2, "medium": 1, "deep": 0 },
+        "August":     { "shallow": 1, "medium": 1, "deep": 1 },
+        "September":  { "shallow": 1, "medium": 0, "deep": 0 },
+        "October":    { "shallow": 1, "medium": 1, "deep": 0 },
+        "November":   { "shallow": 1, "medium": 0, "deep": 1 },
+        "December":   { "shallow": 0, "medium": 0, "deep": 0 }
+      },
+      "costs": {
+        "repairPerShallow": 20,
+        "repairPerMedium": 50,
+        "repairPerDeep": 100,
+        "resurfacePerKm": 100
+      }
+    },
+    {
+      "name": "Dukes Road",
+      "type": "Cart road",
+      "lengthKm": 1.8,
+      "wasResurfaced": false,
+      "potholes": {
+        "shallow": 22,
+        "medium": 14,
+        "deep": 9
+      },
+      "monthlyPotholes": {
+        "January":    { "shallow": 3, "medium": 1, "deep": 1 },
+        "February":   { "shallow": 2, "medium": 2, "deep": 1 },
+        "March":      { "shallow": 2, "medium": 1, "deep": 1 },
+        "April":      { "shallow": 2, "medium": 1, "deep": 1 },
+        "May":        { "shallow": 2, "medium": 2, "deep": 1 },
+        "June":       { "shallow": 2, "medium": 1, "deep": 1 },
+        "July":       { "shallow": 2, "medium": 1, "deep": 1 },
+        "August":     { "shallow": 2, "medium": 1, "deep": 0 },
+        "September":  { "shallow": 1, "medium": 2, "deep": 1 },
+        "October":    { "shallow": 2, "medium": 1, "deep": 1 },
+        "November":   { "shallow": 1, "medium": 0, "deep": 0 },
+        "December":   { "shallow": 1, "medium": 1, "deep": 0 }
+      },
+      "costs": {
+        "repairPerShallow": 20,
+        "repairPerMedium": 50,
+        "repairPerDeep": 100,
+        "resurfacePerKm": 100
+      }
+    },
+    {
+      "name": "Coastal Road",
+      "type": "Residential road",
+      "lengthKm": 5.1,
+      "wasResurfaced": true,
+      "potholes": {
+        "shallow": 12,
+        "medium": 6,
+        "deep": 3
+      },
+      "monthlyPotholes": {
+        "January":    { "shallow": 1, "medium": 1, "deep": 0 },
+        "February":   { "shallow": 2, "medium": 1, "deep": 0 },
+        "March":      { "shallow": 1, "medium": 0, "deep": 1 },
+        "April":      { "shallow": 1, "medium": 1, "deep": 0 },
+        "May":        { "shallow": 2, "medium": 1, "deep": 0 },
+        "June":       { "shallow": 1, "medium": 1, "deep": 0 },
+        "July":       { "shallow": 1, "medium": 0, "deep": 1 },
+        "August":     { "shallow": 1, "medium": 1, "deep": 0 },
+        "September":  { "shallow": 1, "medium": 0, "deep": 0 },
+        "October":    { "shallow": 0, "medium": 0, "deep": 1 },
+        "November":   { "shallow": 1, "medium": 0, "deep": 0 },
+        "December":   { "shallow": 0, "medium": 0, "deep": 0 }
+      },
+      "costs": {
+        "repairPerShallow": 20,
+        "repairPerMedium": 50,
+        "repairPerDeep": 100,
+        "resurfacePerKm": 100
+      }
+    },
+    {
+      "name": "Hilltop Road",
+      "type": "Highway (2 lanes)",
+      "lengthKm": 5.8,
+      "wasResurfaced": false,
+      "potholes": {
+        "shallow": 15,
+        "medium": 10,
+        "deep": 4
+      },
+      "monthlyPotholes": {
+        "January":    { "shallow": 2, "medium": 1, "deep": 0 },
+        "February":   { "shallow": 1, "medium": 1, "deep": 1 },
+        "March":      { "shallow": 2, "medium": 1, "deep": 0 },
+        "April":      { "shallow": 1, "medium": 2, "deep": 0 },
+        "May":        { "shallow": 2, "medium": 1, "deep": 1 },
+        "June":       { "shallow": 1, "medium": 1, "deep": 0 },
+        "July":       { "shallow": 2, "medium": 1, "deep": 0 },
+        "August":     { "shallow": 1, "medium": 1, "deep": 1 },
+        "September":  { "shallow": 1, "medium": 0, "deep": 0 },
+        "October":    { "shallow": 1, "medium": 1, "deep": 0 },
+        "November":   { "shallow": 1, "medium": 0, "deep": 1 },
+        "December":   { "shallow": 0, "medium": 0, "deep": 0 }
+      },
+      "costs": {
+        "repairPerShallow": 20,
+        "repairPerMedium": 50,
+        "repairPerDeep": 100,
+        "resurfacePerKm": 100
+      }
+    }
+  ]
+}

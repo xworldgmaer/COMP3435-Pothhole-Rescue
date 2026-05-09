@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="loginStylesheet.css">
+    <link rel="icon" type="image/png" href="assets/Images/UserInterfaceLogo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- particles.js MUST load before login.js so particlesJS() exists when called -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="login.js" defer></script>
+    <title>Login - Pothole Rescue</title>
+</head>
+<body>
+
+<a href="#loginForm" class="skipLink">Skip to login form</a>
+
+<!-- particles.js renders its canvas inside this div -->
+<div id="particles-js" aria-hidden="true"></div>
+
+<!-- About Us Modal -->
+<div id="aboutModal" class="modalOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <div class="modalBox">
+        <div class="modalHeader">
+            <h3 id="aboutTitle">About Pothole Rescue</h3>
+                <button id="aboutCloseBtn" type="button" class="modalClose" aria-label="Close" onclick="closeAbout()">✕</button>
+            </div>
+        <div class="aboutBody">
+            <div class="aboutLogoWrap"><img src="assets/Images/UserInterfaceLogo.png" alt="Logo"></div>
+            <p>Pothole Rescue is Barbados's dedicated road condition management platform,helping drivers navigate safely and empowering road authorities to make data-driven repair decisions.</p>
+            <h4>Our Mission</h4>
+            <p>Connect everyday drivers with real-time road data and give the Ministry of Transport the tools needed to keep Barbados's roads safe.</p>
+            <h4>Who Uses It?</h4>
+            <div class="roleCards">
+                <div class="roleCard"><span>🚗</span><strong>Customers</strong><p>Plan safer routes and report hazards.</p></div>
+                <div class="roleCard"><span>🏛️</span><strong>Government</strong><p>Oversee repair costs and road reports.</p></div>
+                <div class="roleCard"><span>🔧</span><strong>IT / Maintenance</strong><p>Manage data and monitor system health.</p></div>
+            </div>
+            <h4>Built By</h4>
+            <p>Group Leader: Deondre McClean</p>
+        </div>
+    </div>
+</div>
+
+<!-- Navbar -->
+<nav role="navigation" aria-label="Main navigation">
+    <div class="navBrand">
+        <img src="assets/Images/UserInterfaceLogo.png" alt="Pothole Rescue logo" class="navLogo">
+        <span class="navTitle">Pothole Rescue</span>
+    </div>
+    <div class="navLinks">
+        <a href="index.html">Dashboard</a>
+        <a href="#" onclick="openAbout(); return false;">About Us</a>
+        <a href="signUp.html" class="navSignupBtn">Sign Up</a>
+    </div>
+</nav>
+
+<!-- Welcome toast -->
+<div id="toast" class="toast" role="alert" aria-live="assertive" hidden></div>
+
+<!-- Login card -->
+<div class="authContainer">
+    <div class="authCard" id="loginCard">
+
+        <div class="cardAccent"></div>
+
+        <div class="formLogo">
+            <img src="assets/Images/UserInterfaceLogo.png" alt="Pothole Rescue">
+        </div>
+        <h2>Welcome Back</h2>
+        <p class="authSubtitle">Sign in to your Pothole Rescue account</p>
+
+        <!-- Role tabs -->
+        <div class="roleTabs" role="group" aria-label="Select your account role">
+            <button class="roleTab active" data-role="Customer"     onclick="selectRole(this)" aria-pressed="true" >🚗 Customer</button>
+            <button class="roleTab"        data-role="Government"   onclick="selectRole(this)" aria-pressed="false">🏛️ Gov</button>
+            <button class="roleTab"        data-role="IT Staff"     onclick="selectRole(this)" aria-pressed="false">🔧 IT Staff</button>
+            <button class="roleTab"        data-role="Administrator"onclick="selectRole(this)" aria-pressed="false">🛡 Admin</button>
+        </div>
+
+        <form id="loginForm" novalidate aria-labelledby="loginHeading">
+            <span id="loginHeading" class="sr-only">Login form</span>
+
+            <div class="inputGroup">
+                <label for="username">Username</label>
+                <div class="inputWrap">
+                    <span class="iIcon">👤</span>
+                    <input id="username" type="text" placeholder="Enter your username"
+                           required autocomplete="username" aria-required="true"
+                           aria-describedby="usernameHint">
+                </div>
+                <span id="usernameHint" class="fieldHint">Your registered username</span>
+            </div>
+
+            <div class="inputGroup">
+                <label for="password">Password</label>
+                <div class="inputWrap">
+                    <span class="iIcon">🔒</span>
+                    <input id="password" type="password" placeholder="Enter your password"
+                           required autocomplete="current-password" aria-required="true">
+                    <button type="button" class="pwToggle" onclick="togglePw('password')" aria-label="Show/hide password">👁</button>
+                </div>
+            </div>
+
+            <div class="formExtras">
+                <label class="rememberLabel">
+                    <input type="checkbox" id="rememberMe"> Remember me
+                </label>
+                <a href="#" class="forgotLink" onclick="showToast('Contact support@potholerescue.bb to reset your password.','info'); return false;">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="submitBtn">
+                <span id="btnText">Login</span>
+                <span id="btnSpinner" class="spinner" hidden></span>
+            </button>
+
+            <p id="status" role="alert" aria-live="assertive" class="statusMsg"></p>
+        </form>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <div class="oauthRow">
+            <button class="oauthBtn gBtn" onclick="socialLogin('Google')" aria-label="Continue with Google">
+                <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Google
+            </button>
+            <button class="oauthBtn fbBtn" onclick="socialLogin('Facebook')" aria-label="Continue with Facebook">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+                Facebook
+            </button>
+        </div>
+
+        <p class="smallText">No account? <a href="signUp.html">Sign up here</a></p>
+
+        <!-- Demo credentials hint -->
+        <details class="demoHint">
+            <summary>Demo login credentials</summary>
+            <table class="demoTable">
+                <thead><tr><th>Role</th><th>Username</th><th>Password</th></tr></thead>
+                <tbody>
+                    <tr><td>🚗 Customer</td><td>customer</td><td>Customer123!</td></tr>
+                    <tr><td>🏛️ Government</td><td>gov</td><td>Government123!</td></tr>
+                    <tr><td>🔧 IT Staff</td><td>itstaff</td><td>ITStaff123!</td></tr>
+                    <tr><td>🛡 Admin</td><td>admin</td><td>Admin123!</td></tr>
+                </tbody>
+            </table>
+        </details>
+
+    </div>
+</div>
+
+<script>
+// Modal helpers (inline so they work before login.js DOMContentLoaded)
+function openAbout() {
+  const aboutModal = document.getElementById('aboutModal');
+  if (!aboutModal) return;
+  aboutModal.hidden = false;
+  aboutModal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAbout() {
+  const aboutModal = document.getElementById('aboutModal');
+  if (!aboutModal) return;
+  aboutModal.hidden = true;
+  aboutModal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const aboutModal = document.getElementById('aboutModal');
+  const closeBtn = document.getElementById('aboutCloseBtn');
+
+  if (closeBtn && aboutModal) {
+    closeBtn.addEventListener('click', closeAbout);
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target === aboutModal) {
+      closeAbout();
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeAbout();
+    }
+  });
+});
+
+function togglePw(id) { const i=document.getElementById(id); i.type=i.type==='password'?'text':'password'; }
+
+function showToast(msg, type) {
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast toast-'+type; t.hidden=false;
+    setTimeout(()=>{ t.hidden=true; }, 4500);
+}
+
+function selectRole(btn) {
+    document.querySelectorAll('.roleTab').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
+}
+</script>
+</body>
+</html>

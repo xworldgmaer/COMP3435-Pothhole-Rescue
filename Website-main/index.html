@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="indexStylesheet.css">
+    <link rel="icon" type="image/png" href="assets/Images/UserInterfaceLogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="index.js" defer></script>
+    <title>Pothole Rescue - Barbados Road Management</title>
+</head>
+<body>
+
+<a href="#mainContent" class="skipLink">Skip to main content</a>
+
+<!-- ══ NAVBAR ══════════════════════════════════════════════════════ -->
+<nav role="navigation" aria-label="Main navigation" id="mainNav">
+    <div class="navBrand" onclick="showScreen('homeTab')" role="button" tabindex="0" aria-label="Go to Home">
+        <img src="assets/Images/UserInterfaceLogo.png" alt="Pothole Rescue logo" class="navLogo">
+        <span class="navTitle">Pothole Rescue</span>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="navLinks" id="navLinks" role="menubar">
+        <a href="#" role="menuitem" onclick="showScreen('homeTab');closeMobileMenu()">Home</a>
+        <a href="#" role="menuitem" id="aboutNavLink" onclick="showScreen('aboutTab');closeMobileMenu()">About US</a>
+        <a href="#" role="menuitem" onclick="showScreen('teamTab');closeMobileMenu()">Team</a>
+        <a href="#" role="menuitem" onclick="showScreen('contactTab');closeMobileMenu()">Contact</a>
+        <a href="#" role="menuitem" onclick="openTutorial();closeMobileMenu()" class="navTutorialLink">📖 Tutorial</a>
+        <a href="#" role="menuitem" onclick="showScreen('settingsTab');closeMobileMenu()">⚙ Settings</a>
+        <div id="loginLogoutLi"><a href="login.html" class="navLoginBtn" aria-label="Login">Login</a></div>
+    </div>
+</nav>
+
+<!-- ══ ROAD PICKER MODAL ═══════════════════════════════════════════ -->
+<div id="roadPickerModal" class="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="pickerTitle" hidden>
+    <div class="modalBox">
+        <div class="modalHeader">
+            <h3 id="pickerTitle">🛣️ Select a Road</h3>
+            <button class="modalClose" onclick="closeRoadPicker()" aria-label="Close road picker">✕</button>
+        </div>
+        <input type="text" id="pickerSearch" placeholder="Filter roads..." oninput="filterRoadPicker()"
+               aria-label="Filter road list" class="pickerInput" autocomplete="off">
+        <div id="roadPickerList" class="roadPickerList" role="listbox" aria-label="Available roads"></div>
+    </div>
+</div>
+
+<!-- ══ TUTORIAL MODAL ══════════════════════════════════════════════ -->
+<div id="tutorialModal" class="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="tutTitle" hidden>
+    <div class="modalBox modalLarge">
+        <div class="modalHeader">
+            <h3 id="tutTitle">📖 How to Use Pothole Rescue</h3>
+            <button class="modalClose" onclick="closeTutorial()" aria-label="Close tutorial">✕</button>
+        </div>
+        <div id="tutSlideArea">
+            <div class="tutSlide" id="tutSlide0">
+                <div class="tutIcon">🚗</div>
+                <h4>Welcome to Pothole Rescue</h4>
+                <p>Barbados's road management platform. Track potholes, plan safer routes, and help authorities prioritise repairs all in one place.</p>
+            </div>
+            <div class="tutSlide" id="tutSlide1" hidden>
+                <div class="tutIcon">🗺️</div>
+                <h4>Step 1: Plan Your Route</h4>
+                <p>Click <strong>Plan Route</strong> in the sidebar. Type a road name or click <strong>Browse Roads</strong> to pick from a popup list. An interactive Barbados map will highlight the road.</p>
+            </div>
+            <div class="tutSlide" id="tutSlide2" hidden>
+                <div class="tutIcon">📊</div>
+                <h4>Step 2: Read the Analysis</h4>
+                <p>Results show pothole density, depth breakdown (shallow / medium / deep), estimated costs, and a decay forecast. Cards are colour-coded by severity.</p>
+            </div>
+            <div class="tutSlide" id="tutSlide3" hidden>
+                <div class="tutIcon">📉</div>
+                <h4>Step 3: Monitor Decay</h4>
+                <p>The <strong>Decay</strong> tab shows an animated progress bar filling toward the 50% critical threshold, plus a week-by-week projection chart.</p>
+            </div>
+            <div class="tutSlide" id="tutSlide4" hidden>
+                <div class="tutIcon">⚙️</div>
+                <h4>Step 4: Customise</h4>
+                <p>Use <strong>Settings</strong> to switch Light / Dark / High Contrast themes, adjust text size, enable dyslexia-friendly font, and set alert thresholds.</p>
+            </div>
+            <div class="tutSlide" id="tutSlide5" hidden>
+                <div class="tutIcon">✅</div>
+                <h4>You're Ready!</h4>
+                <p>Close this guide and start exploring Barbados's road network. The <strong>Contact</strong> page is always available if you need help.</p>
+            </div>
+        </div>
+        <div class="tutFooter">
+            <button onclick="prevTutStep()" id="tutPrev" class="tutBtn" disabled>← Back</button>
+            <div id="tutDots" class="tutDots"></div>
+            <button onclick="nextTutStep()" id="tutNext" class="tutBtn">Next →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══ LAYOUT ═══════════════════════════════════════════════════════ -->
+<div class="heroContainer">
+
+    <!-- SIDEBAR -->
+    <aside class="menuContainer" id="sidebar" aria-label="Feature navigation">
+        <div class="menuButton"><button onclick="showScreen('homeTab')" data-tab="homeTab"><span class="menuIcon">🏠</span><span class="menuLabel">Home</span></button></div>
+        <div class="menuButton"><button onclick="showScreen('planTab')" data-tab="planTab"><span class="menuIcon">🗺️</span><span class="menuLabel">Plan Route</span></button></div>
+        <div class="menuButton"><button onclick="showScreen('aboutTab')" data-tab="aboutTab"><span class="menuIcon">🛣️</span><span class="menuLabel">About Road</span></button></div>
+        <div class="menuButton"><button onclick="showScreen('costTab')" data-tab="costTab"><span class="menuIcon">💰</span><span class="menuLabel">Cost</span></button></div>
+        <div class="menuButton"><button onclick="showScreen('decayTab')" data-tab="decayTab"><span class="menuIcon">📉</span><span class="menuLabel">Decay</span></button></div>
+        <div class="menuButton"><button onclick="showScreen('numberTab')" data-tab="numberTab"><span class="menuIcon">🔢</span><span class="menuLabel">Numbers</span></button></div>
+        <div class="menuButton"><button onclick="showScreen('summaryTab')" data-tab="summaryTab"><span class="menuIcon">📋</span><span class="menuLabel">Summary</span></button></div>
+        <div class="sidebarDivider"></div>
+        <div class="menuButton"><button onclick="showScreen('reportsTab')" data-tab="reportsTab"><span class="menuIcon">📄</span><span class="menuLabel">Reports</span></button></div>
+        <div class="menuButton"><button onclick="openTutorial()"><span class="menuIcon">📖</span><span class="menuLabel">Tutorial</span></button></div>
+    </aside>
+
+    <!-- MAIN -->
+    <main id="mainContent" class="menuDisplay">
+
+        <!-- ═══ HOME ══════════════════════════════════════════════ -->
+        <div id="homeTab" class="tabPanel" aria-labelledby="homeH">
+
+            <section class="heroBanner">
+                <div class="heroBannerText">
+                    <span class="heroBadge">🇧🇧 Barbados Road Network</span>
+                    <p id="userGreeting" class="heroSmall">Welcome to Pothole Rescue your route planning and road monitoring hub.</p>
+                    <h1 id="homeH">Pothole Rescue</h1>
+                    <p class="heroDesc">Real-time pothole intelligence for drivers and road authorities across Barbados. Plan safer routes, estimate repair costs, and monitor road decay all in one platform.</p>
+                    <div class="heroCTA">
+                        <button class="ctaPrimary" onclick="showScreen('planTab')">🗺️ Plan a Route</button>
+                        <button class="ctaSecondary" onclick="openTutorial()">📖 How It Works</button>
+                    </div>
+                </div>
+                <div class="heroStats">
+                    <div class="statPill"><span id="statRoads">—</span><small>Roads Tracked</small></div>
+                    <div class="statPill"><span id="statPotholes">—</span><small>Total Potholes</small></div>
+                    <div class="statPill"><span id="statResurfaced">—</span><small>Roads Resurfaced</small></div>
+                </div>
+            </section>
+
+            <section class="homeGrid" aria-label="Quick access features">
+                <div class="homeCard" onclick="showScreen('planTab')" role="button" tabindex="0"><div class="homeCardIcon">🗺️</div><h3>Plan Route</h3><p>Search any road and get instant pothole density, depth breakdown and safety rating.</p></div>
+                <div class="homeCard" data-role="Administrator,Government,IT Staff" onclick="showScreen('costTab')" role="button" tabindex="0"><div class="homeCardIcon">💰</div><h3>Cost Estimate</h3><p>Calculate repair vs resurfacing costs and get a recommended action for any road.</p></div>
+                <div class="homeCard" data-role="Administrator,Government,IT Staff" onclick="showScreen('decayTab')" role="button" tabindex="0"><div class="homeCardIcon">📉</div><h3>Decay Analysis</h3><p>See how quickly deep potholes are growing and forecast when action is needed.</p></div>
+                <div class="homeCard" data-role="Customer,Administrator,Government,IT Staff" onclick="showScreen('companyAboutTab')" role="button" tabindex="0"><div class="homeCardIcon">ℹ️</div><h3>About Us</h3><p>Learn how Pothole Rescue keeps drivers safe and supports transport planners with the right road data.</p></div>
+                <div class="homeCard" data-role="Administrator,Government,IT Staff" onclick="showScreen('reportsTab')" role="button" tabindex="0"><div class="homeCardIcon">📄</div><h3>Reports</h3><p>Full pothole reports across all roads with charts by road type and month.</p></div>
+                <div class="homeCard" data-role="Administrator,Government,IT Staff" onclick="showScreen('numberTab')" role="button" tabindex="0"><div class="homeCardIcon">🔢</div><h3>Numbers</h3><p>Monthly breakdown of shallow, medium and deep potholes for any road.</p></div>
+                <div class="homeCard" onclick="openTutorial()" role="button" tabindex="0"><div class="homeCardIcon">📖</div><h3>Tutorial</h3><p>New here? Follow our step-by-step guide to get the most from Pothole Rescue.</p></div>
+            </section>
+
+            <section class="homeMapSection">
+                <h2>🗺️ Barbados Road Network</h2>
+                <p class="hintText">Select a road in Plan Route to highlight it on this map.</p>
+                <div id="homeMap" class="mapContainer" aria-label="Interactive map of Barbados"></div>
+            </section>
+
+        </div>
+
+        <!-- ═══ PLAN ROUTE ════════════════════════════════════════ -->
+        <div id="planTab" class="tabPanel" hidden aria-labelledby="planH">
+            <h2 id="planH">🗺️ Plan Next Route</h2>
+
+            <div class="searchBar" role="search">
+                <label for="roadSearch">Select or search a road:</label>
+                <div class="searchInputRow">
+                    <input type="text" id="roadSearch" placeholder="e.g. ABC Highway..."
+                           aria-describedby="searchHint" autocomplete="off" list="roadSuggestions"
+                           oninput="liveFilter()">
+                    <datalist id="roadSuggestions"></datalist>
+                    <button class="browseBtn" onclick="openRoadPicker()" aria-label="Browse all roads">Browse ▾</button>
+                    <button class="searchBtn" onclick="handleSearch()" aria-label="Search">Search</button>
+                </div>
+            </div>
+            <p id="searchHint" class="hintText">Type a road name, browse the list, or press Enter to search.</p>
+            <div id="status" role="status" aria-live="polite" aria-atomic="true"></div>
+
+            <div id="planMapWrap" class="mapContainer planMap" hidden aria-label="Map showing selected road on Barbados"></div>
+
+            <div class="resultsContainer" id="planResults">
+                <div id="densityOutput"      class="resultCard cardSlide" hidden></div>
+                <div id="avgDistanceOutput"  class="resultCard cardSlide" hidden></div>
+                <div id="depthPercentOutput" class="resultCard cardSlide" hidden></div>
+                <div id="costDecisionOutput" class="resultCard cardSlide" hidden></div>
+                <div id="decayOutput"        class="resultCard cardSlide" hidden></div>
+                <div id="reportOutput"       class="resultCard cardSlide" hidden></div>
+            </div>
+
+            <div id="customerPlanner" class="plannerBox customer-view">
+                <p class="hintText">Enter your start location and destination to find the safest driving route across Barbados.</p>
+             
+                <div class="routeInputs">
+                    <div class="routeField">
+                        <label for="fromLocation">🟢 From</label>
+                        <input type="text" id="fromLocation"
+                               placeholder="e.g. Oistins, Worthing, Bridgetown"
+                               list="locationSuggestions"
+                               autocomplete="off"
+                               aria-label="Start location">
+                    </div>
+                    <div class="routeSwapBtn" onclick="swapLocations()" title="Swap locations" aria-label="Swap start and destination">⇅</div>
+                    <div class="routeField">
+                        <label for="toLocation">🔴 To</label>
+                        <input type="text" id="toLocation"
+                               placeholder="e.g. Black Rock, Holetown, Speightstown"
+                               list="locationSuggestions"
+                               autocomplete="off"
+                               aria-label="Destination">
+                    </div>
+                    <datalist id="locationSuggestions"></datalist>
+                    <button class="searchBtn routePlanBtn" onclick="planRoute()" aria-label="Find safest route">
+                        🗺 Find Route
+                    </button>
+                </div>
+             
+                <!-- Quick location presets -->
+                <div class="routePresets" aria-label="Quick route presets">
+                    <span class="presetsLabel">Quick routes:</span>
+                    <button class="presetBtn" onclick="setRoute('Oistins','Black Rock')">Oistins → Black Rock</button>
+                    <button class="presetBtn" onclick="setRoute('Bridgetown','Speightstown')">Bridgetown → Speightstown</button>
+                    <button class="presetBtn" onclick="setRoute('Holetown','Worthing')">Holetown → Worthing</button>
+                    <button class="presetBtn" onclick="setRoute('Six Cross Roads','Bridgetown')">Six Cross Roads → Bridgetown</button>
+                </div>
+             
+                <div id="routeStatus" role="status" aria-live="polite" class="routeStatus"></div>
+                <div id="routeResults" class="resultsContainer"></div>
+            </div>
+        </div>
+
+        <!-- ═══ ABOUT ROAD ════════════════════════════════════════ -->
+        <div id="aboutTab" class="tabPanel" hidden aria-labelledby="aboutH">
+            <h2 id="aboutH">🛣️ About Road</h2>
+            <p class="hintText">Search a road in Plan Route first.</p>
+            <div id="aboutRoadContent" class="resultsContainer"></div>
+        </div>
+
+        <!-- ═══ ABOUT US (COMPANY) ════════════════════════════════════════ -->
+        <div id="companyAboutTab" class="tabPanel" hidden aria-labelledby="companyAboutH">
+            <h2 id="companyAboutH">ℹ️ About Us</h2>
+            <div class="resultsContainer">
+                <div class="resultCard">
+                    <h3>Our Mission</h3>
+                    <p>Pothole Rescue is dedicated to enhancing road safety across Barbados by providing real-time pothole data, route planning tools, and actionable insights for drivers and road authorities.</p>
+                </div>
+                <div class="resultCard">
+                    <h3>Standards & Quality</h3>
+                    <p>We adhere to the highest standards of data accuracy, user privacy, and accessibility. Our platform is built with modern web technologies to ensure reliability and performance.</p>
+                </div>
+                <div class="resultCard">
+                    <h3>Who We Serve</h3>
+                    <p>From everyday drivers planning safer routes to government officials monitoring infrastructure, Pothole Rescue empowers all users with the information they need to make informed decisions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ COST ══════════════════════════════════════════════ -->
+        <div id="costTab" class="tabPanel" hidden aria-labelledby="costH">
+            <h2 id="costH">💰 Estimate Cost</h2>
+            <p class="hintText">Search a road in Plan Route first.</p>
+            <div id="costTabContent" class="resultsContainer"></div>
+        </div>
+
+        <!-- ═══ DECAY ═════════════════════════════════════════════ -->
+        <div id="decayTab" class="tabPanel" hidden aria-labelledby="decayH">
+            <h2 id="decayH">📉 Decay Analysis</h2>
+            <p class="hintText">Search a road in Plan Route first.</p>
+            <div id="decayTabContent" class="resultsContainer"></div>
+
+            <div id="decayVis" class="decayVis" hidden>
+                <div class="resultCard">
+                    <h3>Deep Pothole Progress</h3>
+                    <p class="hintText">How close this road is to the 50% critical threshold.</p>
+                    <div class="decayBarWrap">
+                        <div class="decayBarBg">
+                            <div class="decayBarFill" id="decayBarFill">
+                                <span class="decayBarPct" id="decayBarPct">0%</span>
+                            </div>
+                        </div>
+                        <div class="decayBarMarkers">
+                            <span>0%</span><span class="markerMid">⚠ 50%</span><span>100%</span>
+                        </div>
+                    </div>
+                    <p id="decayStatusMsg" class="decayStatusMsg" aria-live="polite"></p>
+                </div>
+                <div class="resultCard" style="margin-top:0">
+                    <h3>Week-by-Week Projection</h3>
+                    <canvas id="decayProjectionChart" aria-label="Decay projection over coming weeks" role="img" style="max-height:260px"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ NUMBERS ═══════════════════════════════════════════ -->
+        <div id="numberTab" class="tabPanel" hidden aria-labelledby="numberH">
+            <h2 id="numberH">🔢 Pothole Numbers</h2>
+            <p class="hintText">Search a road in Plan Route first.</p>
+            <div id="numberTabContent" class="resultsContainer"></div>
+        </div>
+
+        <!-- ═══ SUMMARY ═══════════════════════════════════════════ -->
+        <div id="summaryTab" class="tabPanel" hidden aria-labelledby="summaryH">
+            <h2 id="summaryH">📋 Road Summary</h2>
+            <p class="hintText">Search a road in Plan Route first.</p>
+            <div id="summaryTabContent" class="resultsContainer"></div>
+        </div>
+
+        <!-- ═══ REPORTS ═══════════════════════════════════════════ -->
+        <div id="reportsTab" class="tabPanel" hidden aria-labelledby="reportsH">
+            <h2 id="reportsH">📄 All Road Reports</h2>
+            <div id="reportsTabContent" class="resultsContainer"></div>
+            <div class="chartCard"><h3>Potholes Per Road</h3><canvas id="potholesChart" role="img" aria-label="Potholes per road chart"></canvas></div>
+            <div class="chartCard" style="margin-top:24px"><h3>Potholes by Road Type</h3><canvas id="typeChart" role="img" aria-label="Potholes by road type chart"></canvas></div>
+        </div>
+
+        <!-- ═══ TEAM ══════════════════════════════════════════════ -->
+        <div id="teamTab" class="tabPanel" hidden aria-labelledby="teamH">
+            <h2 id="teamH">👥 Our Team</h2>
+            <div id="teamCards" class="teamContainer"></div>
+        </div>
+
+        <!-- ═══ CONTACT ═══════════════════════════════════════════ -->
+        <div id="contactTab" class="tabPanel" hidden aria-labelledby="contactH">
+            <h2 id="contactH">📬 Contact Us</h2>
+            <p class="hintText">Have a question or want to report a road issue? Reach out below.</p>
+            <div class="resultsContainer">
+                <div class="resultCard contactInfoCard">
+                    <h3>Get in Touch</h3>
+                    <div class="contactGrid">
+                        <div class="contactItem"><span class="cIcon">📧</span><div><strong>Email</strong><p>support@potholerescue.bb</p></div></div>
+                        <div class="contactItem"><span class="cIcon">📞</span><div><strong>Phone</strong><p>+1 (246) 555-0100</p></div></div>
+                        <div class="contactItem"><span class="cIcon">📍</span><div><strong>Address</strong><p>Ministry of Transport, Bay Street, Bridgetown, Barbados</p></div></div>
+                        <div class="contactItem"><span class="cIcon">🕘</span><div><strong>Hours</strong><p>Mon–Fri, 8:00 AM – 4:30 PM EST</p></div></div>
+                    </div>
+                </div>
+                <div class="resultCard">
+                    <h3>Send a Message</h3>
+                    <form id="contactForm" onsubmit="submitContact(event)" novalidate aria-label="Contact form">
+                        <div class="formGroup"><label for="cName">Full Name</label><input type="text" id="cName" placeholder="Your full name" required aria-required="true"></div>
+                        <div class="formGroup"><label for="cEmail">Email Address</label><input type="email" id="cEmail" placeholder="your@email.com" required aria-required="true"></div>
+                        <div class="formGroup"><label for="cRoad">Road (optional)</label><input type="text" id="cRoad" placeholder="Road this concerns" list="roadSuggestions"></div>
+                        <div class="formGroup"><label for="cMsg">Message</label><textarea id="cMsg" rows="5" placeholder="Describe your issue or question..." required aria-required="true"></textarea></div>
+                        <button type="submit" class="submitBtn">Send Message 📤</button>
+                        <p id="contactStatus" role="alert" aria-live="assertive" style="margin-top:10px;font-weight:600;"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ TERMS OF SERVICE ══════════════════════════════════ -->
+        <div id="tosTab" class="tabPanel" hidden aria-labelledby="tosH">
+            <h2 id="tosH">📜 Terms of Service</h2>
+            <div class="resultsContainer">
+                <div class="resultCard tosContent">
+                    <p class="hintText">Last updated: May 2026</p>
+                    <h3>1. Acceptance of Terms</h3><p>By accessing Pothole Rescue, you agree to be bound by these Terms of Service.</p>
+                    <h3>2. Use of the Platform</h3><p>Pothole Rescue is provided for informational purposes related to road conditions in Barbados. You may use it to plan routes, review road condition reports, and access cost estimates.</p>
+                    <h3>3. Accuracy of Data</h3><p>While we strive to keep pothole data accurate, Pothole Rescue makes no guarantees regarding real-time accuracy. Always exercise caution when driving.</p>
+                    <h3>4. User Accounts</h3><p>You are responsible for maintaining the confidentiality of your login credentials. Any activity under your account is your responsibility.</p>
+                    <h3>5. Privacy</h3><p>We collect minimal data necessary for platform operation. Contact form submissions are used solely for customer support. We do not sell personal data.</p>
+                    <h3>6. Intellectual Property</h3><p>All content, design, and code within Pothole Rescue is the intellectual property of the development team (COMP3435 Group Project, UWI). Unauthorised reproduction is prohibited.</p>
+                    <h3>7. Limitation of Liability</h3><p>Pothole Rescue shall not be liable for damages arising from reliance on platform data. Road conditions change rapidly and should be verified with official sources.</p>
+                    <h3>8. Changes to Terms</h3><p>We reserve the right to update these Terms at any time. Continued use constitutes acceptance of the revised terms.</p>
+                    <h3>9. Contact</h3><p>For questions, visit our <a href="#" onclick="showScreen('contactTab')" class="tosLink">Contact page</a>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ SETTINGS ══════════════════════════════════════════ -->
+        <div id="settingsTab" class="tabPanel" hidden aria-labelledby="settingsH">
+            <h2 id="settingsH">⚙️ Settings</h2>
+            <div class="resultsContainer">
+                <div class="resultCard">
+                    <h3>Theme Mode</h3>
+                    <div class="toggleGroup" role="group" aria-label="Theme mode options">
+                        <button type="button" class="toggleBtn themeToggleBtn active" data-value="light" aria-pressed="true" onclick="setTheme('light')">Light</button>
+                        <button type="button" class="toggleBtn themeToggleBtn" data-value="dark" aria-pressed="false" onclick="setTheme('dark')">Dark</button>
+                        <button type="button" class="toggleBtn themeToggleBtn" data-value="contrast" aria-pressed="false" onclick="setTheme('contrast')">High Contrast</button>
+                    </div>
+                </div>
+                <div class="resultCard">
+                    <h3>Text Size</h3>
+                    <div class="toggleGroup" role="group" aria-label="Text size options">
+                        <button type="button" class="toggleBtn fontSizeToggleBtn active" data-value="normal" aria-pressed="true" onclick="setFontSize('normal')">Normal</button>
+                        <button type="button" class="toggleBtn fontSizeToggleBtn" data-value="large" aria-pressed="false" onclick="setFontSize('large')">Large</button>
+                        <button type="button" class="toggleBtn fontSizeToggleBtn" data-value="xlarge" aria-pressed="false" onclick="setFontSize('xlarge')">Extra Large</button>
+                    </div>
+                </div>
+                <div class="resultCard">
+                    <h3>Font Style</h3>
+                    <div class="toggleGroup" role="group" aria-label="Font style options">
+                        <button type="button" class="toggleBtn fontStyleToggleBtn active" data-value="standard" aria-pressed="true" onclick="setFontStyle('standard')">Standard</button>
+                        <button type="button" class="toggleBtn fontStyleToggleBtn" data-value="dyslexic" aria-pressed="false" onclick="setFontStyle('dyslexic')">Dyslexia-Friendly</button>
+                    </div>
+                    <p class="hintText" style="margin-top:8px">Dyslexia-friendly font improves letter spacing and character distinction.</p>
+                </div>
+                <div class="resultCard">
+                    <h3>Unit Preferences</h3>
+                    <label>Distance: <select id="unitDistance" onchange="updateUnits()"><option value="km">Kilometers</option><option value="miles">Miles</option></select></label><br><br>
+                    <label>Currency: <select id="unitCurrency" onchange="updateUnits()"><option value="USD">USD ($)</option><option value="BBD">BBD (BBD $)</option><option value="CAD">CAD (CA $)</option></select></label>
+                </div>
+                <div class="resultCard">
+                    <h3>Alert Thresholds</h3>
+                    <label>Max Density (potholes/km): <input type="number" id="densityThreshold" value="5" min="1" max="100" onchange="updateAlerts()"></label><br><br>
+                    <label>Deep Pothole % Warning: <input type="number" id="deepThreshold" value="50" min="1" max="100" onchange="updateAlerts()">%</label><br><br>
+                    <label>Cost Difference Alert ($): <input type="number" id="costThreshold" value="500" min="0" onchange="updateAlerts()"></label>
+                </div>
+                <div class="resultCard">
+                    <h3>Simulation Controls</h3>
+                    <label for="growthRate">Weekly Growth Rate:</label>
+                    <input type="range" id="growthRate" min="1" max="5" value="1" step="1" oninput="updateSimulation()">
+                    <p id="growthRateLabel" aria-live="polite">Growth Rate: 1 pothole/week</p>
+                </div>
+                <div class="resultCard">
+                    <h3>Sound Notifications</h3>
+                    <div class="notificationItem">
+                        <div class="notificationLabel">
+                            <strong>Enable notification sounds</strong>
+                            <small>Play audio alerts for important notifications</small>
+                        </div>
+                        <label class="toggleSwitch">
+                            <input type="checkbox" id="soundToggle" onchange="toggleSound()">
+                            <span class="toggleSlider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="resultCard">
+                    <h3>⚙️ Simulation Controls</h3>
+                    <div class="simulationGroup">
+                        <div>
+                            <div class="sliderLabel">
+                                <span>Simulation Speed</span>
+                                <span class="sliderValue" id="speedValue">1.0x</span>
+                            </div>
+                            <input type="range" class="simulationSlider" id="simSpeed" 
+                                   min="0.5" max="3" step="0.5" value="1" 
+                                   oninput="updateSimValue('speedValue', this.value, 'x')">
+                        </div>
+                        <div>
+                            <div class="sliderLabel">
+                                <span>Decay Intensity</span>
+                                <span class="sliderValue" id="intensityValue">50%</span>
+                            </div>
+                            <input type="range" class="simulationSlider" id="simIntensity" 
+                                   min="0" max="100" step="10" value="50" 
+                                   oninput="updateSimValue('intensityValue', this.value, '%')">
+                        </div>
+                        <div>
+                            <div class="sliderLabel">
+                                <span>Time Scale (Days)</span>
+                                <span class="sliderValue" id="timeValue">1</span>
+                            </div>
+                            <input type="range" class="simulationSlider" id="simTime" 
+                                   min="1" max="30" step="1" value="1" 
+                                   oninput="updateSimValue('timeValue', this.value, '')">
+                        </div>
+                    </div>
+                </div>
+                <div class="resultCard">
+                    <h3>🔔 Notifications</h3>
+                    <div class="notificationGroup">
+                        <div class="notificationItem">
+                            <div class="notificationLabel">
+                                <strong>Enable Notifications</strong>
+                                <small>Get alerts when roads need attention</small>
+                            </div>
+                            <label class="toggleSwitch">
+                                <input type="checkbox" id="enableNotifications" onchange="toggleNotifications()">
+                                <span class="toggleSlider"></span>
+                            </label>
+                        </div>
+                        <div class="notificationItem" style="opacity: 0.6;" id="notificationOptions">
+                            <div class="notificationLabel">
+                                <strong>Alert When Deep Potholes Exceed</strong>
+                                <small>Threshold: <span id="depthThresholdValue">50</span>%</small>
+                            </div>
+                            <input type="range" min="10" max="100" step="5" value="50" 
+                                   onchange="updateNotificationThreshold(this.value)" 
+                                   id="depthThresholdSlider" style="width: 80px; margin-left: 12px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="resultCard">
+                    <h3>Reset Dashboard</h3>
+                    <button onclick="resetDashboard()" class="dangerBtn">Reset All Data</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════════════ -->
+<footer class="siteFooter" role="contentinfo">
+    <div class="footerInner">
+        <div class="footerBrand">
+            <img src="assets/Images/UserInterfaceLogo.png" alt="Pothole Rescue" class="footerLogo">
+            <span class="footerBrandName">Pothole Rescue</span>
+        </div>
+        <nav class="footerLinks" aria-label="Footer navigation">
+            <a href="#" onclick="showScreen('homeTab')">Home</a>
+            <a href="#" onclick="showScreen('contactTab')">Contact</a>
+            <a href="#" onclick="showScreen('tosTab')">Terms of Service</a>
+            <a href="#" onclick="openTutorial()">Tutorial</a>
+            <a href="#" onclick="showScreen('teamTab')">Team</a>
+        </nav>
+        <p class="footerCopy">© 2026 Pothole Rescue - Project</p>
+    </div>
+</footer>
+
+</body>
+</html>
